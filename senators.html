@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 2</title>
+    <link rel="stylesheet" href="senators.css">
+</head>
+<body>
+    <p id="dems"></p>
+    <p id="reps"></p>
+    <p id="indep"></p>
+    <div id="id01">...</div>
+
+    <div id="buttons">
+        <input type="text" id="inputbar" onkeyup="tablefilter()" placeholder="Search the table...">
+        <button id="all_button" onclick="reset()">Clear Filters</button>
+        <div class ="dropdown" id="drop_party">...</div>
+        <div class ="dropdown" id="drop_rank">...</div>
+        <div class ="dropdown" id="drop_state">...</div>
+    </div>
+    <div id="active_filters"></div>
+
+    <div id="all">...</div>
+    <div id="extras">...</div>
+
+    <script>
+        //Allow multiple word inputs, split them and run each sequentially
+        //Allow the user to select ex. Republican and Independent and show the union
+        function reset() {
+            inputbar.value = ''
+            console.log(active_filters.length)
+            let iter = active_filters.length
+            let i = 0
+            while (i<iter) {
+                let key = active_filters[0][0],
+                    value = active_filters[0][1];
+                let id = key+"_"+value
+                document.getElementById(id).remove();
+                i+=1
+                console.log("Slicing:",active_filters)
+                active_filters.shift()
+                console.log(active_filters)
+            }
+            getData();
+        }
+
+        getData();
+
+        async function getData() {
+            try {
+                const url = "senators.json";
+                const promise = await fetch(url);
+
+                // Check if the request was successful
+                if (!promise.ok) {
+                    throw new Error(
+                        `HTTP error! status: ${promise.status}`
+                    );
+                }
+
+                const data = await promise.json();
+
+                displayJSON(data);
+            } catch (error) {
+                document.getElementById("id01").innerText = error;
+            }
+        }
+        function displayJSON(obj) {
+
+                var array = obj.objects;
+
+                var table1 = "<table> <tr> <th>Titled</th> <th></th> <th>Name</th> <th>Surname</th> <th>Party</th> </tr>"
+                  , table2 = "<table id='alltable'> <tr> <th>Name</th> <th>Surname</th> <th>Party</th> <th>State</th> <th>Gender</th> <th>Rank</th> </tr>"
+                  , extratable = "<table id='extratable'> <tr> <th>Office</th> <th>Date of birth</th> <th>Start Date</th> <th>Twitter ID</th> <th>Youtube ID</th> <th>Link</th> </tr>"
+                  , t_democrat =""
+                  , democrat = ""
+                  , t_republican =""
+                  , republican = ""
+                  , t_independent = ""
+                  , independent = ""
+                  , no_democrat = 0
+                  , no_republican = 0
+                  , no_independent = 0
+                  , all_democrat = ""
+                  , all_republican = ""
+                  , all_independent = ""
+                  , all_democrat_ext = ""
+                  , all_republican_ext = ""
+                  , all_independent_ext = ""
+                  , partys = []
+                  , states = []
+                  , ranks = [];
+                    // table += "<tr><th>Type</th><th>Number</th></tr>";
+                for (let i = 0; i < array.length; i++) {
+                    var name = array[i].person.firstname
+                      , surname = array[i].person.lastname
+                      , party = array[i].party
+                      , state = array[i].state
+                      , gender = array[i].person.gender
+                      , rank = array[i].senator_rank_label
+                      , office = array[i].extra.office
+                      , dob = array[i].person.birthday
+                      , start = array[i].startdate
+                      , twitter = array[i].person.twitterid
+                      , youtube = array[i].person.youtubeid
+                      , link = array[i].website;
+
+                    if (youtube === null){
+                        youtube = "N/A"
+                    }
+                    if (twitter === null){
+                        twitter = "N/A"
+                    }
+
+                    function lists(col,val) {
+                        eval('if (!'+col+'s.includes("'+val+'")) {'+col+'s.push("'+val+'")}')
+                    }
+                    
+                    lists('party',party)
+                    lists('rank',rank)
+                    lists('state',state)
+
+                    var title = ''
+
+                    let roles = [name,surname,party]
+                    let details = [name,surname,party,state,gender,rank]
+                    let extras = [office,dob,start,twitter,youtube,"<a target='_blank' href='" + link + "''>" + link + "</a>"];
+
+                    function tabrow(roles) {
+                        return "<tr> <td>"+roles.join('</td><td>')+"</td> </tr>"
+                    }
+                    function sortrows(party) {
+                        if (array[i].leadership_title !== null) {
+                            title = array[i].leadership_title;
+                            roles.unshift(title,":");
+                            eval("t_"+party+" += tabrow(roles)");
+                        } else {
+                            eval(party+" += tabrow(roles)");
+                        }
+                        eval("no_"+party+" += 1");
+                        eval("all_"+party+" += tabrow(details)");
+                        eval("all_"+party+"_ext"+" += tabrow(extras)");
+                    }
+
+                    if (party === "Democrat") {
+                        sortrows("democrat");
+                    } else if (party === "Republican") {
+                        sortrows("republican");
+                    } else {
+                        sortrows("independent");
+                    }
+
+                }
+
+                table1 += t_democrat + t_republican + t_independent + "</table>"/*+ "<br> -Untitled- <br>" + democrat + republican*/
+                table2 +=  all_democrat + all_republican + all_independent + "</table>"
+                extratable += all_democrat_ext + all_republican_ext + all_independent_ext + "</table>"
+
+                document.getElementById("dems").innerHTML = "No of Democrats: " + no_democrat;
+                document.getElementById("reps").innerHTML = "No of Republicans: " + no_republican;
+                document.getElementById("indep").innerHTML = "No of Independent: " + no_independent;
+                document.getElementById("id01").innerHTML = table1;
+                document.getElementById("all").innerHTML = table2;
+                document.getElementById("extras").innerHTML = extratable;
+
+                //console.log(partys)
+                const searching = ['partys','states','ranks']
+                for(let i=0; i<searching.length; i++) {
+                    builddrops(searching[i])
+                }
+                
+                function builddrops(drops) {
+                    var filter = drops; //partys
+                    //console.log(filter)
+                    var filter_name = filter.slice(0, -1); //party
+                    var filter_name_caps = filter_name.charAt(0).toUpperCase() + filter_name.slice(1)
+                    var filter_list = eval(filter).sort()
+
+                    var filter_drop = "<button class='dropbtn' id='"+filter_name+"_button'>"+filter_name_caps+"</button> <div class='drop_content'>"
+
+                    for(let j=0; j<filter_list.length;j++) {
+                        //console.log(filter_list[j])
+                        filter_drop += "<a onclick='searchtable(`"+filter_name_caps+"`,`"+filter_list[j]+"`)'>"+filter_list[j]+"</a>";
+                    }
+
+                    filter_drop += "</div> </div>"
+                    //console.log('document.getElementById("drop_'+filter_name+').innerHTML ="'+ filter_drop + '"')
+                    eval('document.getElementById("drop_'+filter_name+'").innerHTML = "'+ filter_drop + '"')
+                    console.log("Finished reloading the table")
+                }
+            }
+        
+        var active_filters = [];
+
+        async function reload_table() {
+            await getData();
+            console.log("Table reloaded")
+        }
+
+        async function run_active_filters() {
+            console.log("Reloading the table")
+            await reload_table();
+            console.log("Current active filters",active_filters)
+            console.log("Individually running them")
+            console.log("Activate filter length",active_filters.length)
+            for (let i=0; i<active_filters.length; i++) {
+                console.log("Running",active_filters[i][0],active_filters[i][1])
+                await searchtable(active_filters[i][0],active_filters[i][1]);
+            }
+            console.log("Finished reloading filters")
+        }
+
+        async function tablefilter() {
+            console.log("Reloading data")
+            await run_active_filters();
+            console.log("Reloaded. Now searching")
+
+            var heads,
+                search,
+                table,
+                row;
+            
+            /*if (keyword!="") {
+                search = keyword.toUpperCase();
+            } else {
+                search = document.getElementById("inputbar").value.toUpperCase();
+            }*/
+            search = inputbar.value.toUpperCase();
+
+            table = document.getElementById("alltable");
+            rows = table.getElementsByTagName("tr");
+            heads = rows[0].getElementsByTagName("th");
+
+            var head_names = [];
+            for(let i=0; i<heads.length; i++) {
+                head_names.push(heads[i].innerText);
+            }
+            //let index = head_names.indexOf(col);
+
+            var keep = [];
+            for(let j=0; j<head_names.length; j++) {
+                for(let i=0; i<rows.length; i++) {
+                    td = rows[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        if (td.innerHTML.toUpperCase().indexOf(search) > -1 && rows[i].style.display !== "none") {
+                            keep.push(rows[i]);}
+                        if (j===head_names.length -1) {rows[i].style.display = "none"; }
+                        }
+                    }
+            } 
+            for(let i=0;i<keep.length;i++) {
+                keep[i].style.display = "";
+            }
+        }
+
+        function searchtable(key,val) { //'State','NZ'
+            console.log("Now loading filter",key, val)
+            //console.log('fired')
+            var heads,
+                search,
+                table,
+                row,
+                ind;
+            
+            search = val.toUpperCase();
+            //console.log(search)
+            //console.log(key)
+
+            table = document.getElementById("alltable");
+            rows = table.getElementsByTagName("tr");
+            heads = rows[0].getElementsByTagName("th");
+
+            var head_names = [];
+            for(let i=0; i<heads.length; i++) {
+                head_names.push(heads[i].innerText);
+            }
+
+            var ind = head_names.indexOf(key)
+
+            for(let i=0; i<rows.length; i++) {
+                td = rows[i].getElementsByTagName("td")[ind];
+                //console.log(td)
+                if (td) {
+                    //let val = td.innerText || td.innerHTML
+                    if (td.innerHTML.toUpperCase().indexOf(search) > -1 && rows[i].style.display !== "none") {
+                        rows[i].style.display = "";
+                    } else { 
+                        rows[i].style.display = "none"; 
+                    }
+                }
+            }
+
+            var check = 0
+
+            for (let i = 0; i<active_filters.length; i++) {
+                if (active_filters[i].toString() === [key,val].toString()) {
+                    var check = 1
+                }
+            }
+
+            if (check === 0) {
+            active_filters.push([key,val])
+            var id = key+"_"+val
+            var element = document.getElementById(id)
+            if (element === null) {
+                console.log('<button id='+key+'_'+val+' onclick="remove_filter(`'+key+'`,`'+val+'`)">Remove:'+key+'='+val+'</button>')
+                add_button = '<button id='+key+'_'+val+' onclick="remove_filter(`'+key+'`,`'+val+'`)">Remove:'+key+'='+val+'</button>'
+                document.getElementById("active_filters").innerHTML += add_button
+                console.log("Finishing loading",key,val) 
+            }
+            }
+        }
+
+        function remove_filter(key,val) {
+            console.log("Old:",active_filters)
+            var id = key+"_"+val
+            document.getElementById(id).remove();
+            let iter = active_filters.length
+            let i = 0
+            var new_filt = []
+            while (i<iter) {
+                console.log("Loop",i,"iter",iter)
+                console.log(active_filters)
+                if (active_filters[i].toString() === [key,val].toString()) {
+                    //active_filters.splice(i,1);
+                    console.log("Dropping:",[key,val])
+                } else {
+                    console.log("Pushing:",active_filters[i])
+                    new_filt.push(active_filters[i])
+                }
+                i+=1
+            }
+            console.log(new_filt)
+            active_filters = new_filt
+            console.log("New:",active_filters)
+            tablefilter(); 
+
+        }
+    </script>
+
+    
+    <!-- var keep = []
+            for(let j=0;j<head_names.length; j++) {
+            for(let i=0; i<rows.length; i++) {
+                td = rows[i].getElementsByTagName("td")[j];
+                if (td) {
+                    //let val = td.innerText || td.innerHTML
+                    if (td.innerHTML.toUpperCase().indexOf(search) > -1) {//&& rows[i].style.display !== "none") {
+                        rows[i].style.display = "";
+                    } else { if (j===head_names.length -1) {
+                        rows[i].style.display = "none"; }
+                    }
+                }
+            } }-->
+    
+</body>
+</html>
