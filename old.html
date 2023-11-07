@@ -7,37 +7,30 @@
     <link rel="stylesheet" href="senators.css">
 </head>
 <body>
-    <h1>United States Senators</h1>
-    
-    <header>
-        <p id="dems"></p>
-        <p id="reps"></p>
-        <p id="indep"></p>
-    </header>
+    <p id="dems"></p>
+    <p id="reps"></p>
+    <p id="indep"></p>
+    <div id="id01">...</div>
 
-    <section>
-        <div id="id01">...</div>
+    <div id="buttons">
+        <input type="text" id="inputbar" onkeyup="tablefilter()" placeholder="Search the table...">
+        <button id="all_button" onclick="reset()">Clear Filters</button>
+        <div class ="dropdown" id="drop_party">...</div>
+        <div class ="dropdown" id="drop_rank">...</div>
+        <div class ="dropdown" id="drop_state">...</div>
+    </div>
+    <div id="filters">
+        <p style="padding:2px">Active filters</p>
+        <div id="active_filters"></div>
+        <div id="entires"></div>
+    </div>
 
-        <div id="buttons">
-            <input type="text" id="inputbar" onkeyup="tablefilter()" placeholder="Search the table...">
-            <button id="all_button" onclick="reset()">Clear Filters</button>
-            <div class ="dropdown" id="drop_party">...</div>
-            <div class ="dropdown" id="drop_rank">...</div>
-            <div class ="dropdown" id="drop_state">...</div>
-        </div>
-        <div id="filters">
-            <h4 style="text-align: left; margin:0;">Active Filters</h4>
-            <div id="active_filters"></div>
-            <div id="entires"></div>
-        </div>
-
-        <div id="all">...</div>
-    </section>
+    <div id="all">...</div>
     <!--<div id="extras">...</div>-->
 
     <script>
         //Allow multiple word inputs, split them and run each sequentially
-        //Create empty rows after each normal row in which extras content will be displayed in accordion style
+        //Allow the user to select ex. Republican and Independent and show the union
         function get_rows() {
             let table = document.getElementById("alltable")
             let rows = table.getElementsByTagName("tr");
@@ -52,7 +45,7 @@
                     } 
                 }
             }
-            return "<h5 style='margin:0;'>Entries found: " + count + "</h5>"
+            return "Entries found: " + count
         }
         function reset_filtertable() {
             document.getElementById("all").innerHTML = table2;
@@ -74,27 +67,6 @@
             active_filters = [[''],[''],['']]
             reset_filtertable(); //getData();
             document.getElementById("entires").innerHTML = get_rows();  
-            add_extras();
-        }
-
-        function add_extras() {
-            for (let i = 0; i < acc.length; i++) {
-                acc[i].addEventListener("click", function() {
-                    /* Toggle between adding and removing the "active" class,
-                    to highlight the button that controls the panel */
-                    this.classList.toggle("active");
-
-                    /* Toggle between hiding and showing the active panel */
-                    var panel = this.nextElementSibling;
-                    if (panel.style.maxHeight) {
-                        panel.style.maxHeight = null;
-                        this.innerText = "Expand";
-                        } else {
-                        panel.style.maxHeight = panel.scrollHeight + "px";
-                        this.innerText = "Contract";
-                    }
-                });
-                }
         }
 
         getData();
@@ -116,13 +88,12 @@
                 displayJSON(data);
             } catch (error) {
                 document.getElementById("id01").innerText = error;
-                throw new Error("Something went badly wrong!");
             }
         }
 
         var table1 = "<table> <tr> <th>Titled</th> <th></th> <th>Name</th> <th>Surname</th> <th>Party</th> </tr>"
-                  , table2 = "<table id='alltable'> <tr> <th>Name</th> <th>Surname</th> <th>Party</th> <th>State</th> <th>Gender</th> <th>Rank</th> <th>Extras</th> </tr>"
-                  //, extratable = "<table id='extratable'> <tr> <th>Office</th> <th>Date of birth</th> <th>Start Date</th> <th>Twitter ID</th> <th>Youtube ID</th> <th>Link</th> </tr>"
+                  , table2 = "<table id='alltable'> <tr> <th>Name</th> <th>Surname</th> <th>Party</th> <th>State</th> <th>Gender</th> <th>Rank</th> </tr>"
+                  , extratable = "<table id='extratable'> <tr> <th>Office</th> <th>Date of birth</th> <th>Start Date</th> <th>Twitter ID</th> <th>Youtube ID</th> <th>Link</th> </tr>"
                   , t_democrat =""
                   , democrat = ""
                   , t_republican =""
@@ -143,8 +114,7 @@
                   , ranks = []
                   , head_names = []
                   , table
-                  , temp_table
-                  , acc;
+                  , temp_table;
 
         function displayJSON(obj) {
 
@@ -184,16 +154,11 @@
 
                     let roles = [name,surname,party]
                     let details = [name,surname,party,state,gender,rank]
-                    let extras = ["<b>Office: </b>"+office,"<b>DOB: </b>"+dob,"<b>Started: </b>"+start,"<b>Twitter: </b>"+twitter,"<b>Youtube: </b>"+youtube,"<a target='_blank' href='" + link + "''>" + link + "</a>"];
+                    let extras = [office,dob,start,twitter,youtube,"<a target='_blank' href='" + link + "''>" + link + "</a>"];
 
-                    function tabrow(roles,extras='none') {
-                        if (extras!='none') {
-                            return "<tr> <td>"+roles.join('</td><td>')+"</td> <td> <button class='accordion'> Expand </button> <div class='panel'> <p>"+extras.join('<br><br>')+"</p> </div> </td> </tr>"
-                        }
-                        else {
-                            return "<tr> <td>"+roles.join('</td><td>')+"</td> </tr>"
-                        }
-                }
+                    function tabrow(roles) {
+                        return "<tr> <td>"+roles.join('</td><td>')+"</td> </tr>"
+                    }
                     function sortrows(party) {
                         if (array[i].leadership_title !== null) {
                             title = array[i].leadership_title;
@@ -203,8 +168,8 @@
                             eval(party+" += tabrow(roles)");
                         }
                         eval("no_"+party+" += 1");
-                        eval("all_"+party+" += tabrow(details,extras)");
-                        //eval("all_"+party+"_ext"+" += tabrow(extras)");
+                        eval("all_"+party+" += tabrow(details)");
+                        eval("all_"+party+"_ext"+" += tabrow(extras)");
                     }
 
                     if (party === "Democrat") {
@@ -219,17 +184,17 @@
 
                 table1 += t_democrat + t_republican + t_independent + "</table>"/*+ "<br> -Untitled- <br>" + democrat + republican*/
                 table2 +=  all_democrat + all_republican + all_independent + "</table>"
-                //extratable += all_democrat_ext + all_republican_ext + all_independent_ext + "</table>"
+                extratable += all_democrat_ext + all_republican_ext + all_independent_ext + "</table>"
 
                 document.getElementById("dems").innerHTML = "No of Democrats: " + no_democrat;
                 document.getElementById("reps").innerHTML = "No of Republicans: " + no_republican;
                 document.getElementById("indep").innerHTML = "No of Independent: " + no_independent;
                 document.getElementById("id01").innerHTML = table1;
                 document.getElementById("all").innerHTML = table2;
-                //document.getElementById("extras").innerHTML = extratable;
+                document.getElementById("extras").innerHTML = extratable;
 
                 //console.log(partys)
-                const searching = ['partys','ranks','states']
+                const searching = ['partys','states','ranks']
                 for(let i=0; i<searching.length; i++) {
                     builddrops(searching[i])
                 }
@@ -240,9 +205,9 @@
                     var filter_name = filter.slice(0, -1); //party
                     var filter_name_caps = filter_name.charAt(0).toUpperCase() + filter_name.slice(1)
                     var filter_list = eval(filter).sort()
+
                     var filter_drop = "<button class='dropbtn' id='"+filter_name+"_button'>"+filter_name_caps+"</button> <div class='drop_content'>"
-                    var filter_div = "<div class='key_divs' id="+filter_name+"_div> <b style='color:#04AA6D; display:flex; justify-content:center; margin-bottom:8px;'>"+filter_name_caps+"</b> </div>"
-                    
+
                     for(let j=0; j<filter_list.length;j++) {
                         //console.log(filter_list[j])
                         filter_drop += "<a onclick='multi_col(`"+filter_name_caps+"`,`"+filter_list[j]+"`)'>"+filter_list[j]+"</a>";
@@ -251,7 +216,6 @@
                     filter_drop += "</div> </div>"
                     //console.log('document.getElementById("drop_'+filter_name+').innerHTML ="'+ filter_drop + '"')
                     eval('document.getElementById("drop_'+filter_name+'").innerHTML = "'+ filter_drop + '"')
-                    eval('document.getElementById("active_filters").innerHTML +="'+filter_div+'"')
                     console.log("Finished reloading the table")
                 }
 
@@ -262,12 +226,6 @@
                     head_names.push(heads[i].innerText);
                 }
                 document.getElementById("entires").innerHTML = get_rows();
-
-                acc = document.getElementsByClassName("accordion");
-
-                add_extras();
-                
-
             }
         
         var active_filters = [[""],[""],[""]];
@@ -333,7 +291,6 @@
                 keep[i].style.display = "";
             }
             document.getElementById("entires").innerHTML = get_rows();
-            add_extras();
         }
         /*
         function searchtable(key,val) { //'State','NZ'
@@ -463,9 +420,7 @@
                     if (element === null) {
                         console.log('<button id='+key+'_'+value+' onclick="remove_filter(`'+key+'`,`'+value+'`)">Remove:'+key+'='+value+'</button>')
                         let add_button = '<button id='+key+'_'+value+' onclick="remove_filter(`'+key+'`,`'+value+'`)">Remove:'+key+'='+value+'</button>'
-                        let div = key.toLowerCase()+"_div"
-                        console.log('document.getElementById('+div+').innerHTML += add_button')
-                        document.getElementById(div).innerHTML += add_button
+                        document.getElementById("active_filters").innerHTML += add_button
                         console.log("Finishing loading",key,value) 
                     }
                 } else {
@@ -529,7 +484,6 @@
                 }
                 document.getElementById("entires").innerHTML = get_rows();
             }
-            add_extras();
         }
 
         function searchtable(key,val) { //'State','NZ'
@@ -584,9 +538,10 @@
                 active_filters[key_array] = ['']
             }
             tablefilter(); 
-            add_extras();
+
         }
         
+
         
     </script>
 
