@@ -38,6 +38,7 @@
     <script>
         //Allow multiple word inputs, split them and run each sequentially
         //Create empty rows after each normal row in which extras content will be displayed in accordion style
+        //Extra boxes overflow in smaller windows
         function get_rows() {
             let table = document.getElementById("alltable")
             let rows = table.getElementsByTagName("tr");
@@ -88,10 +89,10 @@
                     var panel = this.nextElementSibling;
                     if (panel.style.maxHeight) {
                         panel.style.maxHeight = null;
-                        this.innerText = "Expand";
+                        this.innerText = "See more";
                         } else {
                         panel.style.maxHeight = panel.scrollHeight + "px";
-                        this.innerText = "Contract";
+                        this.innerText = "See less";
                     }
                 });
                 }
@@ -188,7 +189,7 @@
 
                     function tabrow(roles,extras='none') {
                         if (extras!='none') {
-                            return "<tr> <td>"+roles.join('</td><td>')+"</td> <td> <button class='accordion'> Expand </button> <div class='panel'> <p>"+extras.join('<br><br>')+"</p> </div> </td> </tr>"
+                            return "<tr> <td>"+roles.join('</td><td>')+"</td> <td> <button class='accordion'> See more </button> <div class='panel'> <p>"+extras.join('<br><br>')+"</p> </div> </td> </tr>"
                         }
                         else {
                             return "<tr> <td>"+roles.join('</td><td>')+"</td> </tr>"
@@ -241,7 +242,7 @@
                     var filter_name_caps = filter_name.charAt(0).toUpperCase() + filter_name.slice(1)
                     var filter_list = eval(filter).sort()
                     var filter_drop = "<button class='dropbtn' id='"+filter_name+"_button'>"+filter_name_caps+"</button> <div class='drop_content'>"
-                    var filter_div = "<div class='key_divs' id="+filter_name+"_div> <b style='color:#04AA6D; display:flex; justify-content:center; margin-bottom:8px;'>"+filter_name_caps+"</b> </div>"
+                    var filter_div = "<div class='key_divs' id="+filter_name+"_div> <b style='color:black;display:flex; justify-content:left; margin-bottom:8px;'>"+filter_name_caps+"</b> </div>"
                     
                     for(let j=0; j<filter_list.length;j++) {
                         //console.log(filter_list[j])
@@ -461,8 +462,8 @@
                     var id = key+"_"+value
                     var element = document.getElementById(id)
                     if (element === null) {
-                        console.log('<button id='+key+'_'+value+' onclick="remove_filter(`'+key+'`,`'+value+'`)">Remove:'+key+'='+value+'</button>')
-                        let add_button = '<button id='+key+'_'+value+' onclick="remove_filter(`'+key+'`,`'+value+'`)">Remove:'+key+'='+value+'</button>'
+                        console.log('<button id='+key+'_'+value+' onclick="remove_filter(`'+key+'`,`'+value+'`)"><span style="color:lightgrey;">x</span> '+value+'</button>')
+                        let add_button = '<button id='+key+'_'+value+' onclick="remove_filter(`'+key+'`,`'+value+'`)"><p style="color:grey; float:left; margin:0;">x</p> <p style="float:center; margin:0;">'+value+'</p></button>'
                         let div = key.toLowerCase()+"_div"
                         console.log('document.getElementById('+div+').innerHTML += add_button')
                         document.getElementById(div).innerHTML += add_button

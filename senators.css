@@ -7,12 +7,14 @@ section {
   margin: 0 auto;
 }
 
-
 table {
     margin:0 auto;
+    margin-top: 20px;
     padding-top: 20px;
     padding-bottom: 20px;
     width:100%;
+    border: 1px solid black;
+    box-shadow: 0 4px 2px -2px lightgrey;
 }
 
 table th {
@@ -120,18 +122,27 @@ p {
   border: 20px;
   outline: solid #04AA6D 2px;
   padding:20px;
-  width:20vw;
+  padding-left: 20px;
+  padding-right: 20px;
   height:15vh;
   overflow:auto;
   flex-direction: column;
-  justify-content: space-between; 
-
+  justify-content: center; 
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  border-radius: 10px;
 }
 
-.key_divs button {
-  display:flex; 
-  justify-content:center;
+.key_divs button { 
+  width: 100%;
+  display: block;
+  margin-bottom: 5px;
 }
+
+.key_divs b {
+  padding-bottom: 3px;
+  border-bottom: 2px solid lightgray;
+}
+
 
 #buttons {
   display:flex;
@@ -140,6 +151,7 @@ p {
   background-color: #04AA6D;
   margin-bottom:20px;
   margin-top: 20px;
+  box-shadow: 0 4px 2px -2px lightgrey;
 }
 
 header {
@@ -150,6 +162,7 @@ header {
   width: 100%;
   display: table;
   table-layout: fixed;
+  box-shadow: 0 4px 2px -2px lightgrey;
 }
 
 header p {
@@ -159,4 +172,8 @@ header p {
 
 h1 {
   text-align: center;
+}
+
+b {
+  text-align: left;
 }
