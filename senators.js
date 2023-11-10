@@ -121,7 +121,7 @@ async function getData() {
 }
 
 var table1 = "<table id='titletable'> <tr> <th>Title</th> <th></th> <th>Name</th> <th>Surname</th> <th>Party</th> </tr>"
-            , table2 = "<table id='alltable'> <tr> <th>Name</th> <th>Surname</th> <th>Party</th> <th>State</th> <th>Gender</th> <th>Rank</th> <th>Extras</th> </tr>"
+            , table2 = "<table id='alltable'> <tr> <th>Name</th> <th>Surname</th> <th>Party</th> <th>State</th> <th>Gender</th> <th>Rank</th> <th>Additional Information</th> </tr>"
             //, extratable = "<table id='extratable'> <tr> <th>Office</th> <th>Date of birth</th> <th>Start Date</th> <th>Twitter ID</th> <th>Youtube ID</th> <th>Link</th> </tr>"
             , t_democrat =""
             , democrat = ""

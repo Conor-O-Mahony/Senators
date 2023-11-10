@@ -7,8 +7,6 @@ section {
   margin: 0 auto;
 }
 
-
-
 table {
     min-width: max-content;
     margin:0 auto;
@@ -28,7 +26,8 @@ table td {
 
 table th {
   text-align: left;
-  padding: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-bottom: 1px solid black;
 }
 
@@ -66,7 +65,7 @@ td:nth-child(1),th:nth-child(1) {
 
 
 p {
-    text-align: center;
+  text-align: center;
 }
 
 .dropbtn {
@@ -157,7 +156,11 @@ p {
 
 
 #alltable td {
-  text-align: center;
+  text-align: left;
+}
+
+#alltable th {
+  text-align: left;
 }
 
 .alt {
