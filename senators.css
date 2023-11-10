@@ -82,8 +82,8 @@ p {
   font-size: 16px;
 }
 
-/* Dropdown Content (Hidden by Default) */
-.drop_content {
+/* Dropdown Content (Hidden by Default) : Source W3Schools */
+.drop_content { 
   display: none;
   position: absolute;
   background-color: #f1f1f1;
@@ -111,6 +111,7 @@ p {
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
 
+/*Source: W3 Schools*/
 .accordion {
   display:block;
   background-color: #eee;
