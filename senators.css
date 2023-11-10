@@ -8,6 +8,7 @@ section {
 }
 
 
+
 table {
     min-width: max-content;
     margin:0 auto;
@@ -15,7 +16,7 @@ table {
     box-shadow: 0 0 0 1px black;
     border-radius: 15px;
     padding: 20px;
-    overflow:hidden
+    overflow:hidden;
 }
 
 table td {
@@ -35,6 +36,7 @@ table, td, th {
   border-collapse: collapse;
   height: 100%;
 }
+
 
 table tr:not(:last-child) {
   border-radius: 15px;
@@ -61,6 +63,7 @@ td:nth-child(1),th:nth-child(1) {
 #all {
   margin-bottom: 100px;
 }
+
 
 p {
     text-align: center;
@@ -238,13 +241,17 @@ h1 {
   text-align: center;
 }
 
+:root {
+  --width: 0
+}
+
 .lds-hourglass { /*https://loading.io/css/*/
   display: none;
-  margin-left: 128px;
   position: absolute;
   width: 30px;
   height: 30px;
   z-index: 10;  
+  margin-left: calc(var(--width) - 45px);
 }
 .lds-hourglass:after {
   content: " ";
@@ -286,6 +293,3 @@ img {
   padding-right: 10px;
 }
 
-input {
-  padding-left: 10px;
-}

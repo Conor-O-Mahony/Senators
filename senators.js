@@ -264,6 +264,12 @@ function displayJSON(obj) {
         document.getElementById("entires").innerHTML = get_rows();
 
         acc = document.getElementsByClassName("accordion");
+        
+        var root = document.querySelector(':root');
+        let width = document.getElementById('inputbar').offsetWidth;
+        let update = width+"px"
+        root.style.setProperty('--width', update);
+
 
         add_extras();
         set_timer();
