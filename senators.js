@@ -1,21 +1,21 @@
 //Allow multiple word inputs, split them and run each sequentially
 //Create empty rows after each normal row in which extras content will be displayed in accordion style
-//Extra boxes overflow in smaller windows
+
 function stripe() {
-    console.log("STRIPE")
+    //console.log("STRIPE");
     let tab = document.getElementById("alltable");
     let all_rows = tab.getElementsByTagName("tr");
     // select all rows which are not hidden
-    rows = []
+    rows = [];
     for (let i=0; i<all_rows.length; i++) {
         if (all_rows[i].style.display!=='none') {
             rows.push(all_rows[i]);
         }
     }
-    console.log(rows)
+    //console.log(rows)
 
     // add a class for every second such row
-    for(var x = 1; x < rows.length; x++) {
+    for(var x = 1; x < rows.length; x++) {  // https://stackoverflow.com/questions/42267771/alternating-table-row-color-robust-to-displaynone-settings
         if (!(x % 2 == 0)) { rows[x].classList.add('alt'); }
         else { rows[x].classList.remove('alt'); }
     }
@@ -39,9 +39,9 @@ function set_timer() {// https://bobbyhadz.com/blog/detect-when-user-stops-typin
 }
 
 function get_rows() {
-    let table = document.getElementById("alltable")
+    let table = document.getElementById("alltable");
     let rows = table.getElementsByTagName("tr");
-    var count = 0
+    var count = 0;
     for(let i=0; i<rows.length; i++) {
         td = rows[i].getElementsByTagName("td")[0];
         //console.log(td)
@@ -52,7 +52,7 @@ function get_rows() {
             } 
         }
     }
-    return "<h5 style='margin:0;'>Entries found: " + count + "</h5>"
+    return "<h5 style='margin:0;'>Entries found: " + count + "</h5>";
 }
 function reset_filtertable() {
     document.getElementById("all").innerHTML = table2;
@@ -60,18 +60,18 @@ function reset_filtertable() {
 }
 
 function reset() {
-    inputbar.value = ''
+    inputbar.value = '';
     for (let i=0; i<active_filters.length; i++) {
         if (active_filters[i].toString()!==[''].toString()) {
             for (let j=0; j<active_filters[i].length; j++) {
                 let key = filter_names[i],
                     value = active_filters[i][j];
-                let id = key+"_"+value
+                let id = key+"_"+value;
                 document.getElementById(id).remove();
             }
         }
     }
-    active_filters = [[''],[''],['']]
+    active_filters = [[''],[''],['']];
     reset_filtertable(); //getData();
     document.getElementById("entires").innerHTML = get_rows();  
     add_extras();
@@ -79,7 +79,7 @@ function reset() {
 }
 
 function add_extras() {
-    for (let i = 0; i < acc.length; i++) {
+    for (let i = 0; i < acc.length; i++) { //https://www.w3schools.com/howto/howto_js_accordion.asp
         acc[i].addEventListener("click", function() {
             /* Toggle between adding and removing the "active" class,
             to highlight the button that controls the panel */
@@ -166,32 +166,32 @@ function displayJSON(obj) {
                 , link = array[i].website;
 
             if (youtube === null){
-                youtube = "N/A"
+                youtube = "N/A";
             }
             if (twitter === null){
-                twitter = "N/A"
+                twitter = "N/A";
             }
 
             function lists(col,val) {
-                eval('if (!'+col+'s.includes("'+val+'")) {'+col+'s.push("'+val+'")}')
+                eval('if (!'+col+'s.includes("'+val+'")) {'+col+'s.push("'+val+'")}');
             }
             
-            lists('party',party)
-            lists('rank',rank)
-            lists('state',state)
+            lists('party',party);
+            lists('rank',rank);
+            lists('state',state);
 
-            var title = ''
+            var title = '';
 
-            let roles = [name,surname,party]
-            let details = [name,surname,party,state,gender,rank]
+            let roles = [name,surname,party];
+            let details = [name,surname,party,state,gender,rank];
             let extras = ["<b>Office: </b><br>"+office,"<b>DOB: </b><br>"+dob,"<b>Started: </b><br>"+start,"<b>Twitter: </b><br>"+twitter,"<b>Youtube: </b><br>"+youtube,"<b> Website: </b><br><a target='_blank' href='" + link + "''>" + link + "</a>"];
 
             function tabrow(roles,extras='none') {
                 if (extras!='none') {
-                    return "<tr> <td>"+roles.join('</td><td>')+"</td> <td> <button class='accordion'> See more </button> <div class='panel'> <p>"+extras.join('<br>')+"</p> </div> </td> </tr>"
+                    return "<tr> <td>"+roles.join('</td><td>')+"</td> <td> <button class='accordion'> See more </button> <div class='panel'> <p>"+extras.join('<br>')+"</p> </div> </td> </tr>";
                 }
                 else {
-                    return "<tr> <td>"+roles.join('</td><td>')+"</td> </tr>"
+                    return "<tr> <td>"+roles.join('</td><td>')+"</td> </tr>";
                 }
         }
             function sortrows(party) {
@@ -217,8 +217,8 @@ function displayJSON(obj) {
 
         }
 
-        table1 += t_democrat + t_republican + t_independent + "</table>"/*+ "<br> -Untitled- <br>" + democrat + republican*/
-        table2 +=  all_democrat + all_republican + all_independent + "</table>"
+        table1 += t_democrat + t_republican + t_independent + "</table>";/*+ "<br> -Untitled- <br>" + democrat + republican*/
+        table2 +=  all_democrat + all_republican + all_independent + "</table>";
         //extratable += all_democrat_ext + all_republican_ext + all_independent_ext + "</table>"
 
         document.getElementById("dems").innerHTML = "No of Democrats: " + no_democrat;
@@ -229,33 +229,33 @@ function displayJSON(obj) {
         //document.getElementById("extras").innerHTML = extratable;
 
         //console.log(partys)
-        const searching = ['partys','ranks','states']
+        const searching = ['partys','ranks','states'];
         for(let i=0; i<searching.length; i++) {
-            builddrops(searching[i])
+            builddrops(searching[i]);
         }
         
         function builddrops(drops) {
             var filter = drops; //partys
             //console.log(filter)
             var filter_name = filter.slice(0, -1); //party
-            var filter_name_caps = filter_name.charAt(0).toUpperCase() + filter_name.slice(1)
-            var filter_list = eval(filter).sort()
-            var filter_drop = "<button class='dropbtn' id='"+filter_name+"_button'>"+filter_name_caps+"</button> <div class='drop_content'>"
-            var filter_div = "<div class='key_divs' id="+filter_name+"_div> <b style='color:black;display:flex; justify-content:left; margin-bottom:8px;'>"+filter_name_caps+"</b> </div>"
+            var filter_name_caps = filter_name.charAt(0).toUpperCase() + filter_name.slice(1);
+            var filter_list = eval(filter).sort();
+            var filter_drop = "<button class='dropbtn' id='"+filter_name+"_button'>"+filter_name_caps+"</button> <div class='drop_content'>";
+            var filter_div = "<div class='key_divs' id="+filter_name+"_div> <b style='color:black;display:flex; justify-content:left; margin-bottom:8px;'>"+filter_name_caps+"</b> </div>";
             
             for(let j=0; j<filter_list.length;j++) {
                 //console.log(filter_list[j])
                 filter_drop += "<a onclick='multi_col(`"+filter_name_caps+"`,`"+filter_list[j]+"`)'>"+filter_list[j]+"</a>";
             }
 
-            filter_drop += "</div> </div>"
+            filter_drop += "</div> </div>";
             //console.log('document.getElementById("drop_'+filter_name+').innerHTML ="'+ filter_drop + '"')
-            eval('document.getElementById("drop_'+filter_name+'").innerHTML = "'+ filter_drop + '"')
-            eval('document.getElementById("active_filters").innerHTML +="'+filter_div+'"')
-            console.log("Finished reloading the table")
+            eval('document.getElementById("drop_'+filter_name+'").innerHTML = "'+ filter_drop + '"');
+            eval('document.getElementById("active_filters").innerHTML +="'+filter_div+'"');
+            console.log("Finished reloading the table");
         }
 
-        table = document.getElementById("alltable") //.innerHTML //asynchoronous bs fix it
+        table = document.getElementById("alltable"); //.innerHTML //asynchoronous bs fix it
         let rows = table.getElementsByTagName("tr");
         let heads = rows[0].getElementsByTagName("th");
         for(let i=0; i<heads.length; i++) {
@@ -267,8 +267,12 @@ function displayJSON(obj) {
         
         var root = document.querySelector(':root');
         let width = document.getElementById('inputbar').offsetWidth;
-        let update = width+"px"
+        let tbl = document.getElementById('alltable').rows
+        let height = tbl[1].offsetHeight
+        let update = width+"px";
+        let update2 = height+"px"
         root.style.setProperty('--width', update);
+        root.style.setProperty('--height', update2);
 
 
         add_extras();
@@ -300,14 +304,14 @@ async function run_active_filters() {
 }*/
 
 async function tablefilter() {
-    console.log("Reloading data")
+    console.log("Reloading data");
     await multi_col();//await run_active_filters();
-    console.log("Reloaded. Now searching")
+    console.log("Reloaded. Now searching");
 
     var heads,
         search,
         //table,
-        row;
+        rows;
     
     //if (keyword!="") {
     //    search = keyword.toUpperCase();
@@ -447,16 +451,16 @@ function cartesian(...args) { //Stole from stack exchange: https://stackoverflow
 }
 
 
-const filter_names = ['Party','Rank','State']
+const filter_names = ['Party','Rank','State'];
 //active_filters = [['Republican','Independent'],['Junior','Senior'],['AK','AZ']];  // [Party,Rank,State], default ['','','']
 
 function multi_col(key=0,value=0) {
     if (key!==0 && value!==0) {
-        var check = 0
-        let key_array = filter_names.indexOf(key)
+        var check = 0;
+        let key_array = filter_names.indexOf(key);
 
         if (active_filters[key_array].toString() == [''].toString()) {
-            active_filters[key_array] = []
+            active_filters[key_array] = [];
         } else {
             for (let i = 0; i<active_filters[key_array].length; i++) {
                 if (active_filters[key_array][i].toString() === value) {
@@ -466,55 +470,55 @@ function multi_col(key=0,value=0) {
         }
 
         if (check === 0) {
-            active_filters[key_array].push(value)
-            var id = key+"_"+value
-            var element = document.getElementById(id)
+            active_filters[key_array].push(value);
+            var id = key+"_"+value;
+            var element = document.getElementById(id);
             if (element === null) {
-                console.log('<button id='+key+'_'+value+' onclick="remove_filter(`'+key+'`,`'+value+'`)"><span style="color:lightgrey;">x</span> '+value+'</button>')
-                let add_button = '<button id='+key+'_'+value+' onclick="remove_filter(`'+key+'`,`'+value+'`)"><p style="color:grey; float:left; margin:0;">x</p> <p style="float:center; margin:0;">'+value+'</p></button>'
-                let div = key.toLowerCase()+"_div"
-                console.log('document.getElementById('+div+').innerHTML += add_button')
-                document.getElementById(div).innerHTML += add_button
-                console.log("Finishing loading",key,value) 
+                console.log('<button id='+key+'_'+value+' onclick="remove_filter(`'+key+'`,`'+value+'`)"><span style="color:lightgrey;">x</span> '+value+'</button>');
+                let add_button = '<button id='+key+'_'+value+' onclick="remove_filter(`'+key+'`,`'+value+'`)"><p style="color:grey; float:left; margin:0;">x</p> <p style="float:center; margin:0;">'+value+'</p></button>';
+                let div = key.toLowerCase()+"_div";
+                console.log('document.getElementById('+div+').innerHTML += add_button');
+                document.getElementById(div).innerHTML += add_button;
+                console.log("Finishing loading",key,value) ;
             }
         } else {
-            console.log("repeat")
+            console.log("repeat");
             return;
         }
     }
-    console.log("AAAAAAAAAAAAAA")
+    console.log("AAAAAAAAAAAAAA");
     reset_filtertable();
 
     var keep_rows = [];
     //temp_table = table
-    console.log(temp_table)
-    let combos = cartesian(...active_filters)
-    console.log("combos",combos)
+    console.log(temp_table);
+    let combos = cartesian(...active_filters);
+    console.log("combos",combos);
 
     if (combos.toString()!==[[''],[''],['']].toString()) {
         for (let i=0; i<combos.length; i++) {
             var out;
-            console.log("cringe")
-            let selection = combos[i]
-            console.log("select",selection)
+            console.log("cringe");
+            let selection = combos[i];
+            console.log("select",selection);
             for (let j=0; j<selection.length; j++) {
-                console.log(selection)
+                console.log(selection);
                 if (selection[j]!=='') {
                     let key = filter_names[j],
                         value = selection[j];
-                    console.log(key,value)
-                    out = searchtable(key,value)
-                    console.log(out)
+                    console.log(key,value);
+                    out = searchtable(key,value);
+                    console.log(out);
                 }
             }
-            keep_rows = keep_rows.concat(out)
-            console.log(out)
+            keep_rows = keep_rows.concat(out);
+            console.log(out);
 
             reset_filtertable();
             
-            let all_rows = table.getElementsByTagName("tr")
+            let all_rows = table.getElementsByTagName("tr");
             for (const element of keep_rows) {
-                console.log("Removing row:",element)
+                console.log("Removing row:",element);
                 all_rows[element].display = "none";
             }
             //console.log("TRS: ",temp_table.getElementsByTagName("tr"))
@@ -526,7 +530,7 @@ function multi_col(key=0,value=0) {
         
         //reset_filtertable();
 
-        console.log(keep_rows)
+        console.log(keep_rows);
 
         //for(var i in keep_rows){
         //    if(keep_rows[i].Value != ""){
@@ -556,11 +560,11 @@ function multi_col(key=0,value=0) {
 }
 
 function searchtable(key,val) { //'State','NZ'
-    console.log("Now loading filter",key, val)
+    console.log("Now loading filter",key, val);
     //console.log('fired')
     var search,
         //table,
-        row,
+        rows,
         ind;
     
     search = val.toUpperCase();
@@ -568,43 +572,43 @@ function searchtable(key,val) { //'State','NZ'
     //console.log(key)
 
     //table = document.getElementById("alltable").innerHTML;
-    console.log("yo")
-    console.log("cringe: ",table)
+    console.log("yo");
+    console.log("cringe: ",table);
     rows = table.getElementsByTagName("tr");
 
-    let keep = []
+    let keep = [];
 
-    var ind = head_names.indexOf(key)
+    var ind = head_names.indexOf(key);
 
     for(let i=0; i<rows.length; i++) {
         td = rows[i].getElementsByTagName("td")[ind];
         //console.log(td)
         if (td) {
             if (td.innerHTML.toUpperCase().indexOf(search) > -1 && rows[i].style.display !== "none") {
-                keep.push(i)
+                keep.push(i);
                 rows[i].style.display = "";
             } else { 
                 rows[i].style.display = "none"; 
             }
         }
     }
-    return keep
+    return keep;
 }
 
 function remove_filter(key,val) {
-    console.log("Old:",active_filters)
-    var id = key+"_"+val
+    console.log("Old:",active_filters);
+    var id = key+"_"+val;
     document.getElementById(id).remove();
     
-    let key_array = filter_names.indexOf(key)
+    let key_array = filter_names.indexOf(key);
 
     for (let i=0; i<active_filters[key_array].length; i++) {
         if (active_filters[key_array][i].toString() === val) {
-            active_filters[key_array].splice(i,1)
+            active_filters[key_array].splice(i,1);
         }
     }
     if (active_filters[key_array].toString() === [].toString()) {
-        active_filters[key_array] = ['']
+        active_filters[key_array] = [''];
     }
     tablefilter(); 
     //add_extras();
